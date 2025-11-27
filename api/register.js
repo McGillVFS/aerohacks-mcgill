@@ -102,7 +102,18 @@ export default async function handler(req = {}, res = {}) {
         ? "This email is already registered."
         : "Failed to save registration";
 
-      respond(res, isConflict ? 409 : 500, { error: errorMessage, details: errorText });
+      console.error("Supabase insert failed", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+
+      respond(res, isConflict ? 409 : 500, {
+        error: errorMessage,
+        details: errorText,
+        status: response.status,
+        statusText: response.statusText
+      });
       return;
     }
 
