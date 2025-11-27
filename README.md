@@ -1,8 +1,6 @@
-# Base44 App
+# McGill AeroHacks
 
-
-This app was created automatically by Base44.
-It's a Vite+React app that communicates with the Base44 API.
+Landing page for the McGill AeroHacks event built with Vite and React.
 
 ## Running the app
 
@@ -17,4 +15,6 @@ npm run dev
 npm run build
 ```
 
-For more information and support, please contact Base44 support at app@base44.com.
+## Optional configuration
+
+`VITE_REGISTRATION_ENDPOINT` can be set to a URL to receive pre-registration submissions. When not provided, submissions are handled client-side only.

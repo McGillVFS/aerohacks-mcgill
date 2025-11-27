@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +33,26 @@ export default function RegistrationForm() {
     setIsSubmitting(true);
     
     try {
-      await base44.entities.Registration.create(formData);
+      const endpoint = import.meta.env.VITE_REGISTRATION_ENDPOINT;
+
+      if (endpoint) {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error("Registration request failed");
+        }
+      } else {
+        // Fallback to a client-only success flow when no endpoint is configured
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        console.info("Registration data captured (not sent to a remote service):", formData);
+      }
+
       setIsSuccess(true);
       setFormData({
         first_name: "",
