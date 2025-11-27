@@ -48,6 +48,12 @@ VITE_REGISTRATION_ENDPOINT="/api/register"
 
 Use the service role key provided for this project (it begins with `sbp_...`), but do not commit it to source control. Add these to `.env.local` for local testing and to Vercel **Project Settings → Environment Variables** for production. The `VITE_REGISTRATION_ENDPOINT` override is optional—`/api/register` is used by default—but setting it explicitly makes the intent clear.
 
+### Where to store the keys
+
+- **Vercel deployments:** put `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in **Project Settings → Environment Variables** (Production and Preview). Redeploy after adding or changing them so the function picks them up. Do **not** add them to the Vercel UI as public (`NEXT_PUBLIC_`/`VITE_`) variables—only the serverless function should see them.
+- **Local development:** create `.env.local` with the same two variables. This file stays on your machine and should never be committed.
+- **Never commit or hardcode the values** in source control or client-side code. The service role key is a secret used only by the `/api/register` backend.
+
 On Vercel the included `vercel.json` keeps `/api/*` routes served by the platform while rewriting everything else to `index.html` for the SPA. If you customize routing, make sure `/api/register` continues to bypass any SPA rewrites.
 
 ## Deploying to Vercel

@@ -1,5 +1,5 @@
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.SUPABASE_URL?.trim();
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/pre_registrations` : null;
 
 const allowHeaders = [
@@ -29,6 +29,10 @@ function parseBody(req) {
   return req.body;
 }
 
+function isLikelyServiceRoleKey(key) {
+  return typeof key === "string" && key.startsWith("sbp_");
+}
+
 /**
  * @param {import("http").IncomingMessage & { body?: unknown }} req
  * @param {import("http").ServerResponse} res
@@ -50,6 +54,15 @@ export default async function handler(req = {}, res = {}) {
 
   if (!supabaseUrl || !supabaseServiceRoleKey || !supabaseTableUrl) {
     respond(res, 500, { error: "Supabase backend is not configured" });
+    return;
+  }
+
+  if (!isLikelyServiceRoleKey(supabaseServiceRoleKey)) {
+    respond(res, 500, {
+      error: "Supabase backend is misconfigured",
+      details:
+        "SUPABASE_SERVICE_ROLE_KEY must be the Service Role key (starts with sbp_) from your Supabase project settings"
+    });
     return;
   }
 
@@ -97,12 +110,29 @@ export default async function handler(req = {}, res = {}) {
 
     if (!response.ok) {
       const isConflict = response.status === 409;
+      const isUnauthorized = response.status === 401 || response.status === 403;
       const errorText = await response.text();
       const errorMessage = isConflict
         ? "This email is already registered."
-        : "Failed to save registration";
+        : isUnauthorized
+          ? "Supabase authentication failed"
+          : "Failed to save registration";
 
-      respond(res, isConflict ? 409 : 500, { error: errorMessage, details: errorText });
+      console.error("Supabase insert failed", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+
+      respond(res, isConflict ? 409 : 500, {
+        error: errorMessage,
+        details: errorText,
+        status: response.status,
+        statusText: response.statusText,
+        hint: isUnauthorized
+          ? "Double-check SUPABASE_SERVICE_ROLE_KEY is the Service Role key from your Supabase project settings."
+          : undefined
+      });
       return;
     }
 
