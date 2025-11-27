@@ -67,7 +67,7 @@ export default function RegistrationForm() {
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
       console.error("Registration error:", error);
-      setError("An error occurred. Please try again.");
+      setError(error?.message || "An error occurred. Please try again.");
     }
     
     setIsSubmitting(false);

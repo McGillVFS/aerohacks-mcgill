@@ -47,3 +47,5 @@ VITE_REGISTRATION_ENDPOINT="/api/register"
 ```
 
 Use the service role key provided for this project (it begins with `sbp_...`), but do not commit it to source control. Add these to `.env.local` for local testing and to Vercel **Project Settings → Environment Variables** for production. The `VITE_REGISTRATION_ENDPOINT` override is optional—`/api/register` is used by default—but setting it explicitly makes the intent clear.
+
+On Vercel the included `vercel.json` keeps `/api/*` routes served by the platform while rewriting everything else to `index.html` for the SPA. If you customize routing, make sure `/api/register` continues to bypass any SPA rewrites.

@@ -48,7 +48,7 @@ export default async function handler(req = {}, res = {}) {
     return;
   }
 
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
+  if (!supabaseUrl || !supabaseServiceRoleKey || !supabaseTableUrl) {
     respond(res, 500, { error: "Supabase backend is not configured" });
     return;
   }
@@ -96,8 +96,13 @@ export default async function handler(req = {}, res = {}) {
     });
 
     if (!response.ok) {
+      const isConflict = response.status === 409;
       const errorText = await response.text();
-      respond(res, 500, { error: "Failed to save registration", details: errorText });
+      const errorMessage = isConflict
+        ? "This email is already registered."
+        : "Failed to save registration";
+
+      respond(res, isConflict ? 409 : 500, { error: errorMessage, details: errorText });
       return;
     }
 
