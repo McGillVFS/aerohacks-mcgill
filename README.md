@@ -19,12 +19,31 @@ Make sure dev dependencies are installed—`npm install` or `npm ci --include=de
 npm run build
 ```
 
-## Optional configuration
+## Registration backend (Supabase)
 
-`VITE_REGISTRATION_ENDPOINT` can be set to a URL to receive pre-registration submissions. When not provided, submissions are handled client-side only. To set it locally, create a `.env.local` file in the project root with:
+1) Create the table the API writes to:
 
-```bash
-VITE_REGISTRATION_ENDPOINT="https://example.com/registration"
+```sql
+create table public.pre_registrations (
+  id uuid primary key default gen_random_uuid(),
+  first_name text not null,
+  last_name text not null,
+  email text not null,
+  mlh_code_of_conduct boolean not null,
+  mlh_privacy_policy boolean not null,
+  mlh_emails boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create unique index if not exists pre_registrations_email_idx on public.pre_registrations(email);
 ```
 
-On Vercel, add the same variable in **Project Settings → Environment Variables** so it is available during builds and runtime.
+2) Configure environment variables so the built-in `/api/register` route can write submissions to Supabase:
+
+```bash
+SUPABASE_URL="https://qtrypzzcjebvfcihiynt.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="<your-service-role-key>" # keep this secret
+VITE_REGISTRATION_ENDPOINT="/api/register"
+```
+
+Use the service role key provided for this project (it begins with `sbp_...`), but do not commit it to source control. Add these to `.env.local` for local testing and to Vercel **Project Settings → Environment Variables** for production. The `VITE_REGISTRATION_ENDPOINT` override is optional—`/api/register` is used by default—but setting it explicitly makes the intent clear.

@@ -33,7 +33,7 @@ export default function RegistrationForm() {
     setIsSubmitting(true);
     
     try {
-      const endpoint = import.meta.env.VITE_REGISTRATION_ENDPOINT;
+      const endpoint = import.meta.env.VITE_REGISTRATION_ENDPOINT || "/api/register";
 
       if (endpoint) {
         const response = await fetch(endpoint, {
@@ -45,7 +45,8 @@ export default function RegistrationForm() {
         });
 
         if (!response.ok) {
-          throw new Error("Registration request failed");
+          const { error: responseError } = await response.json().catch(() => ({}));
+          throw new Error(responseError || "Registration request failed");
         }
       } else {
         // Fallback to a client-only success flow when no endpoint is configured
