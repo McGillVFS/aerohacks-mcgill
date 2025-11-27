@@ -49,3 +49,27 @@ VITE_REGISTRATION_ENDPOINT="/api/register"
 Use the service role key provided for this project (it begins with `sbp_...`), but do not commit it to source control. Add these to `.env.local` for local testing and to Vercel **Project Settings → Environment Variables** for production. The `VITE_REGISTRATION_ENDPOINT` override is optional—`/api/register` is used by default—but setting it explicitly makes the intent clear.
 
 On Vercel the included `vercel.json` keeps `/api/*` routes served by the platform while rewriting everything else to `index.html` for the SPA. If you customize routing, make sure `/api/register` continues to bypass any SPA rewrites.
+
+## Deploying to Vercel
+
+1) Set the environment variables in Vercel **Project Settings → Environment Variables** (or via `vercel env add`) for both **Production** and **Preview** environments:
+
+```
+SUPABASE_URL=https://qtrypzzcjebvfcihiynt.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+VITE_REGISTRATION_ENDPOINT=/api/register
+```
+
+2) For local CI-style deployments, set the Vercel token in your shell so it is not stored in source control:
+
+```bash
+export VERCEL_TOKEN="<your-vercel-token>"
+```
+
+3) Deploy using the included script (prompts will link the project on first run):
+
+```bash
+npm run deploy:vercel
+```
+
+The CLI reuses the `vercel.json` in this repo, so it will apply the same SPA rewrites and build command used locally.
