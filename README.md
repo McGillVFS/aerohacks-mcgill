@@ -21,4 +21,10 @@ npm run build
 
 ## Optional configuration
 
-`VITE_REGISTRATION_ENDPOINT` can be set to a URL to receive pre-registration submissions. When not provided, submissions are handled client-side only.
+`VITE_REGISTRATION_ENDPOINT` can be set to a URL to receive pre-registration submissions. When not provided, submissions are handled client-side only. To set it locally, create a `.env.local` file in the project root with:
+
+```bash
+VITE_REGISTRATION_ENDPOINT="https://example.com/registration"
+```
+
+On Vercel, add the same variable in **Project Settings → Environment Variables** so it is available during builds and runtime.
