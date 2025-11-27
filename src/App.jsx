@@ -1,5 +1,4 @@
 import './App.css'
-import { Analytics } from "@vercel/analytics/next"
 import Pages from "@/pages/index.jsx"
 import { Toaster } from "@/components/ui/toaster"
 
