@@ -4,12 +4,16 @@ Landing page for the McGill AeroHacks event built with Vite and React.
 
 ## Running the app
 
+Install dependencies (includes the dev tools Vite uses for builds) and start the dev server:
+
 ```bash
 npm install
 npm run dev
 ```
 
 ## Building the app
+
+Make sure dev dependencies are installed—`npm install` or `npm ci --include=dev`—then run:
 
 ```bash
 npm run build
