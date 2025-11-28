@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export default function SEO({ 
-  title = "McGill AeroHacks 2026 | Drone Programming Hackathon",
+  title = "McGill AeroHacks",
   description = "Join 150+ students at McGill AeroHacks for 3 days of drone programming, autonomous flight systems, and innovation. March 13th - March 15th, 2026 at McGill University, Montreal.",
   keywords = "hackathon, drone programming, McGill University, aerospace, autonomous drones, computer vision, flight control, Montreal, student hackathon, AeroHacks",
   image = "https://fqbmztbicnxbmhbgncie.supabase.co/storage/v1/object/public/mcgillaerohacks/flavicon.png",
