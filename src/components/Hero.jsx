@@ -89,7 +89,7 @@ export default function Hero({ onRegisterClick }) {
                 className="relative w-full h-auto drop-shadow-2xl"
                 aria-label="McGill AeroHacks Logo"
               >
-                <source src="https://base44.app/api/apps/6902cf6648cb3b2094dab1d3/files/public/6902cf6648cb3b2094dab1d3/eff024138_Copiedeaero-2.mp4" type="video/mp4" />
+                <source src="https://fqbmztbicnxbmhbgncie.supabase.co/storage/v1/object/public/mcgillaerohacks/animatedcircularlogo.mp4" type="video/mp4" />
               </video>
             </div>
           </div>

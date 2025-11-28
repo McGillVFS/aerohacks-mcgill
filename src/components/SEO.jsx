@@ -4,7 +4,7 @@ export default function SEO({
   title = "McGill AeroHacks 2026 | Drone Programming Hackathon",
   description = "Join 150+ students at McGill AeroHacks for 3 days of drone programming, autonomous flight systems, and innovation. March 13th - March 15th, 2026 at McGill University, Montreal.",
   keywords = "hackathon, drone programming, McGill University, aerospace, autonomous drones, computer vision, flight control, Montreal, student hackathon, AeroHacks",
-  image = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/0c348f653_FuturisticLogoDesignforMcGillAeroHacks.png",
+  image = "https://fqbmztbicnxbmhbgncie.supabase.co/storage/v1/object/public/mcgillaerohacks/flavicon.png",
   url = "https://mcgillaerohacks.com",
   type = "website"
 }) {

@@ -149,7 +149,7 @@ export default function SponsorsPage() {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-full shadow-lg"
-                  onClick={() => window.location.href = 'mailto:sponsorship@mcgillaerohacks.com?subject=McGill AeroHacks Sponsorship Inquiry'}
+                  onClick={() => window.location.href = 'mailto:aerialdesign@mcgilleus.ca?subject=McGill AeroHacks Sponsorship Inquiry'}
                 >
                   <Mail className="w-5 h-5 mr-2" />
                   Get in Touch
@@ -379,7 +379,7 @@ export default function SponsorsPage() {
                   size="lg"
                   variant="secondary"
                   className="bg-white text-cyan-600 hover:bg-blue-50 px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full font-semibold"
-                  onClick={() => window.location.href = 'mailto:sponsorship@mcgillaerohacks.com?subject=McGill AeroHacks Sponsorship Inquiry'}
+                  onClick={() => window.location.href = 'mailto:aerialdesign@mcgilleus.ca?subject=McGill AeroHacks Sponsorship Inquiry'}
                 >
                   <Mail className="w-5 h-5 mr-2 flex-shrink-0" />
                   <span className="whitespace-nowrap">Contact Us</span>
