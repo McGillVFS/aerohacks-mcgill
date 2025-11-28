@@ -156,9 +156,10 @@ export default function LoadingScreen({ onLoadComplete }) {
           className="mb-6"
         >
           <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/d5650c898_unblurimageai_Copie_de_aero_3.jpg"
+            src="https://fqbmztbicnxbmhbgncie.supabase.co/storage/v1/object/public/mcgillaerohacks/bgremovedgenmainlogo.png"
             alt="McGill AeroHacks"
             className="w-48 md:w-64 mx-auto drop-shadow-2xl"
+            type="image/png"
           />
         </motion.div>
 
