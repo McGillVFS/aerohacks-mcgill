@@ -181,7 +181,7 @@ export default function Home() {
                 Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-500">Sponsors</span>
               </h2>
               <p className="text-xl text-gray-600 mb-2">
-                Thank you to our amazing partners supporting McGill Aerial Design
+                Thank you to our amazing sponsors supporting McGill Aerial Design!
               </p>
             </motion.div>
 
@@ -251,9 +251,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Registration Section */}
-        <section id="register" className="py-20 px-6 bg-white">
-          <div className="max-w-2xl mx-auto">
+        {/* Partners Section */}
+        <section id="partners" className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+          <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -262,12 +262,49 @@ export default function Home() {
               className="text-center mb-12"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-                Pre-<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Register</span>
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Partners</span>
               </h2>
-              <p className="text-xl text-gray-600">
-                Secure your spot at McGill AeroHacks 2026
+              <p className="text-xl text-gray-600 mb-2">
+                Thank you to our amazing partners supporting McGill Aerial Design!
               </p>
             </motion.div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+              {[
+                { name: "McGill Institute for Aerospace Engineering (MIAE)", logo: "/partners/miae.png", website: "https://www.mcgill.ca/miae/" },
+                { name: "Vertical Flight Society Montréal-Ottawa Chapter", logo: "/partners/vfsmoc.png", website: "https://mtlott.vtol.org/" },
+                { name: "PCBWay", logo: "/partners/pcbway.png", website: "https://www.pcbway.com/project/sponsor/McGill_Aerial_Design_bd4f79a4.html" },
+                { name: "Composia McGill BioDesign", logo: "/partners/composia.png", website: "https://www.mcgillbiodesign.com/projects/composia" },
+                { name: "AESS Concordia", logo: "/partners/aess.png", website: "https://www.instagram.com/aess_concordia/" },
+                { name: "EUS", logo: "/partners/eus.png", website: "https://mcgilleus.ca/" }
+              ].map((partner, index) => (
+                <motion.div
+                  key={partner.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <a href={partner.website} target="_blank" rel="noopener noreferrer" className="block group">
+                    <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 h-40 flex flex-col items-center justify-center relative overflow-hidden border-2 border-transparent group-hover:border-cyan-500">
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-cyan-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <img src={partner.logo} alt={`${partner.name} logo`} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300 relative z-10" />
+                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                        <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center shadow-lg">
+                          <ExternalLink className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Registration Section */}
+        <section id="register" className="py-20 px-6 bg-white">
+          <div className="max-w-2xl mx-auto">
             <RegistrationForm />
           </div>
         </section>
