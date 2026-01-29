@@ -187,12 +187,12 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
               {[
-                { name: "Bell", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/ccfcabb81_IMG_6962.png", website: "https://www.bellflight.com" },
-                { name: "Airbus", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/39f0cab59_image.png", website: "https://www.airbus.com" },
-                { name: "OnShape", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/5d1cf9e78_IMG_6963.png", website: "https://www.onshape.com" },
-                { name: "Polymaker", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/b93939f97_IMG_6960.png", website: "https://www.polymaker.com" },
-                { name: "Dragonplate", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/0d74bad7f_IMG_6966.png", website: "https://www.dragonplate.com" },
-                { name: "4imprint", logo: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/46cbae7e0_IMG_6968.png", website: "https://www.4imprint.com" }
+                { name: "Bell", logo: "/sponsors/bell.png", website: "https://www.bellflight.com" },
+                { name: "Airbus", logo: "/sponsors/airbus.png", website: "https://www.airbus.com" },
+                { name: "OnShape", logo: "/sponsors/onshape.png", website: "https://www.onshape.com" },
+                { name: "Polymaker", logo: "/sponsors/polymaker.png", website: "https://www.polymaker.com" },
+                { name: "Dragonplate", logo: "/sponsors/dragonplate.png", website: "https://www.dragonplate.com" },
+                { name: "4imprint", logo: "/sponsors/4imprint.png", website: "https://www.4imprint.com" }
               ].map((sponsor, index) => (
                 <motion.div
                   key={sponsor.name}

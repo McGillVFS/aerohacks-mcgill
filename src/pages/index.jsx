@@ -1,17 +1,10 @@
 import Layout from "./Layout.jsx";
-
 import Home from "./Home";
-
 import Sponsors from "./Sponsors";
-
 import About from "./About";
-
 import Schedule from "./Schedule";
-
 import Prizes from "./Prizes";
-
 import Register from "./Register";
-
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 const PAGES = {
@@ -52,8 +45,7 @@ function PagesContent() {
         <Layout currentPageName={currentPage}>
             <Routes>            
                 
-                    <Route path="/" element={<Home />} />
-                
+                <Route path="/" element={<Home />} />
                 
                 <Route path="/Home" element={<Home />} />
                 
