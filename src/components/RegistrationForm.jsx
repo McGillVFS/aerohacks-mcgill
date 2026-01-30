@@ -8,6 +8,7 @@ import { CheckCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -23,10 +24,13 @@ export default function RegistrationForm() {
     discord_username: "",
     team_mode: "",
     team_name: "",
-    team_join_code: "",
+    captain_email: "",
     fields_of_study: [],
     interests: [],
     other_interest: "",
+    dietary_restrictions: [],
+    other_dietary: "",
+    accessibility_needs: "",
     mlh_code_of_conduct: false,
     mlh_privacy_policy: false,
     mlh_emails: false
@@ -43,6 +47,25 @@ export default function RegistrationForm() {
     "Concordia University",
     "Université de Montréal",
     "Polytechnique Montréal",
+    "HEC Montréal",
+    "UQAM",
+    "ÉTS",
+    "Dawson College",
+    "John Abbott College",
+    "Marianopolis College",
+    "Vanier College",
+    "Champlain College (St-Lambert)",
+    "Cégep du Vieux Montréal",
+    "Cégep de Maisonneuve",
+    "Cégep André-Laurendeau",
+    "Cégep Ahuntsic",
+    "Cégep Rosemont",
+    "Collège de Bois-de-Boulogne",
+    "Université Laval",
+    "Université de Sherbrooke",
+    "Bishop’s University",
+    "UQTR",
+    "UQO",
     "Other"
   ];
   const fieldsOfStudyOptions = [
@@ -74,6 +97,15 @@ export default function RegistrationForm() {
     "Entrepreneurship / Startups",
     "Other"
   ];
+  const dietaryOptions = [
+    "None",
+    "Vegetarian",
+    "Vegan",
+    "Halal",
+    "Kosher",
+    "Gluten-free",
+    "Other"
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,6 +129,19 @@ export default function RegistrationForm() {
     if (formData.team_mode === "team" && !formData.team_name.trim()) {
       setError("Team name is required when registering with a team.");
       return;
+    }
+
+    if (formData.team_mode === "team" && !formData.captain_email.trim()) {
+      setError("Captain email is required when registering with a team.");
+      return;
+    }
+
+    if (formData.team_mode === "team") {
+      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      if (!emailRegex.test(formData.captain_email.trim())) {
+        setError("Captain email must be a valid email address.");
+        return;
+      }
     }
 
     if (!formData.fields_of_study.length) {
@@ -155,10 +200,13 @@ export default function RegistrationForm() {
           discord_username: formData.discord_username.trim(),
           team_mode: formData.team_mode,
           team_name: formData.team_mode === "team" ? formData.team_name.trim() : "",
-          team_join_code: formData.team_mode === "team" ? formData.team_join_code.trim() : "",
+          captain_email: formData.team_mode === "team" ? formData.captain_email.trim() : "",
           fields_of_study: formData.fields_of_study,
           interests: formData.interests,
-          other_interest: formData.other_interest.trim()
+          other_interest: formData.other_interest.trim(),
+          dietary_restrictions: formData.dietary_restrictions,
+          other_dietary: formData.other_dietary.trim(),
+          accessibility_needs: formData.accessibility_needs.trim()
         };
 
         const response = await fetch(endpoint, {
@@ -193,10 +241,13 @@ export default function RegistrationForm() {
         discord_username: "",
         team_mode: "",
         team_name: "",
-        team_join_code: "",
+        captain_email: "",
         fields_of_study: [],
         interests: [],
         other_interest: "",
+        dietary_restrictions: [],
+        other_dietary: "",
+        accessibility_needs: "",
         mlh_code_of_conduct: false,
         mlh_privacy_policy: false,
         mlh_emails: false
@@ -408,12 +459,15 @@ export default function RegistrationForm() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="team_join_code">Team Join Code (Optional)</Label>
+                          <Label htmlFor="captain_email">Captain’s Email Address *</Label>
                           <Input
-                            id="team_join_code"
-                            value={formData.team_join_code}
-                            onChange={(e) => handleChange("team_join_code", e.target.value)}
-                            placeholder="AERO-2026"
+                            id="captain_email"
+                            type="email"
+                            value={formData.captain_email}
+                            onChange={(e) => handleChange("captain_email", e.target.value)}
+                            required
+                            placeholder="captain@example.com"
+                            aria-required="true"
                           />
                         </div>
                       </div>
@@ -509,6 +563,41 @@ export default function RegistrationForm() {
                         onChange={(e) => handleChange("other_interest", e.target.value)}
                         placeholder="Share any other interests"
                       />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label>Dietary Restrictions (optional)</Label>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {dietaryOptions.map((option) => (
+                          <label key={option} className="flex items-center space-x-3 text-sm text-gray-700">
+                            <Checkbox
+                              checked={formData.dietary_restrictions.includes(option)}
+                              onCheckedChange={() => toggleSelection("dietary_restrictions", option)}
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="other_dietary">Other dietary restrictions (optional)</Label>
+                        <Input
+                          id="other_dietary"
+                          value={formData.other_dietary}
+                          onChange={(e) => handleChange("other_dietary", e.target.value)}
+                          placeholder="Share other dietary needs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="accessibility_needs">Accessibility Concerns (optional)</Label>
+                      <Textarea
+                        id="accessibility_needs"
+                        value={formData.accessibility_needs}
+                        onChange={(e) => handleChange("accessibility_needs", e.target.value)}
+                        placeholder="Let us know about any accessibility needs so we can accommodate you."
+                      />
+                      <p className="text-xs text-gray-500">Let us know about any accessibility needs so we can accommodate you.</p>
                     </div>
 
                     <div className="border-t border-gray-200 pt-6 space-y-4">

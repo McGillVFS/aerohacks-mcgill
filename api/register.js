@@ -67,10 +67,13 @@ export default async function handler(req = {}, res = {}) {
     discord_username,
     team_mode,
     team_name,
-    team_join_code,
+    captain_email,
     fields_of_study,
     interests,
     other_interest,
+    dietary_restrictions,
+    other_dietary,
+    accessibility_needs,
     mlh_code_of_conduct,
     mlh_privacy_policy,
     mlh_emails
@@ -86,14 +89,20 @@ export default async function handler(req = {}, res = {}) {
   const normalizedSchoolOther = trimmed(school_other);
   const normalizedTeamMode = trimmed(team_mode);
   const normalizedTeamName = trimmed(team_name);
-  const normalizedTeamJoinCode = trimmed(team_join_code);
+  const normalizedCaptainEmail = trimmed(captain_email);
   const normalizedOtherInterest = trimmed(other_interest);
+  const normalizedOtherDietary = trimmed(other_dietary);
+  const normalizedAccessibilityNeeds = trimmed(accessibility_needs);
   const normalizedFieldsOfStudy = Array.isArray(fields_of_study)
     ? fields_of_study.map((field) => trimmed(field)).filter(Boolean)
     : [];
   const normalizedInterests = Array.isArray(interests)
     ? interests.map((interest) => trimmed(interest)).filter(Boolean)
     : [];
+  const normalizedDietaryRestrictions = Array.isArray(dietary_restrictions)
+    ? dietary_restrictions.map((restriction) => trimmed(restriction)).filter(Boolean)
+    : [];
+  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
 
   if (
     !trimmed(first_name) ||
@@ -121,6 +130,16 @@ export default async function handler(req = {}, res = {}) {
 
   if (normalizedTeamMode === "team" && !normalizedTeamName) {
     respond(res, 400, { error: "Team name is required when registering with a team." });
+    return;
+  }
+
+  if (normalizedTeamMode === "team" && !normalizedCaptainEmail) {
+    respond(res, 400, { error: "Captain email is required when registering with a team." });
+    return;
+  }
+
+  if (normalizedTeamMode === "team" && !emailRegex.test(normalizedCaptainEmail)) {
+    respond(res, 400, { error: "Captain email must be a valid email address." });
     return;
   }
 
@@ -169,16 +188,49 @@ export default async function handler(req = {}, res = {}) {
     discord_username: normalizedDiscord || null,
     team_mode: normalizedTeamMode,
     team_name: normalizedTeamMode === "team" ? normalizedTeamName : null,
-    team_join_code: normalizedTeamMode === "team" ? normalizedTeamJoinCode || null : null,
+    captain_email: normalizedTeamMode === "team" ? normalizedCaptainEmail.toLowerCase() : null,
     fields_of_study: normalizedFieldsOfStudy,
     interests: normalizedInterests,
     other_interest: normalizedOtherInterest || null,
+    dietary_restrictions: normalizedDietaryRestrictions,
+    other_dietary: normalizedOtherDietary || null,
+    accessibility_needs: normalizedAccessibilityNeeds || null,
     mlh_code_of_conduct: Boolean(mlh_code_of_conduct),
     mlh_privacy_policy: Boolean(mlh_privacy_policy),
     mlh_emails: Boolean(mlh_emails ?? false)
   };
 
   try {
+    if (normalizedTeamMode === "team") {
+      const teamSizeUrl = `${supabaseTableUrl}?select=id&team_name=eq.${encodeURIComponent(normalizedTeamName)}&captain_email=eq.${encodeURIComponent(normalizedCaptainEmail.toLowerCase())}`;
+      const teamSizeResponse = await fetch(teamSizeUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: supabaseServiceRoleKey,
+          Authorization: `Bearer ${supabaseServiceRoleKey}`,
+          Prefer: "count=exact"
+        }
+      });
+
+      if (!teamSizeResponse.ok) {
+        const errorText = await teamSizeResponse.text();
+        respond(res, 500, { error: "Failed to validate team size", details: errorText });
+        return;
+      }
+
+      const contentRange = teamSizeResponse.headers.get("content-range");
+      const totalCount = contentRange?.split("/")[1];
+      const teamCount = Number(totalCount ?? 0);
+
+      if (teamCount >= 5) {
+        respond(res, 400, {
+          error: "This team already has 5 members. Please register as a free agent or contact the organizers."
+        });
+        return;
+      }
+    }
+
     const response = await fetch(supabaseTableUrl, {
       method: "POST",
       headers: {
