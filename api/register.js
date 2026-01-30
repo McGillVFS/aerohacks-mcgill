@@ -1,6 +1,6 @@
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/pre_registrations` : null;
+const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/registrations` : null;
 
 const allowHeaders = [
   "Content-Type",
@@ -58,15 +58,34 @@ export default async function handler(req = {}, res = {}) {
     first_name,
     last_name,
     email,
+    phone_number,
+    age_group,
+    school,
+    school_other,
+    mcgill_email,
+    mcgill_student_id,
+    discord_username,
     mlh_code_of_conduct,
     mlh_privacy_policy,
     mlh_emails
   } = body ?? {};
 
+  const mcgillEmailRegex = /@(mcgill\.ca|mail\.mcgill\.ca)$/i;
+  const discordRegex = /^[a-z0-9._]{2,32}$/;
+  const trimmed = (value) => (typeof value === "string" ? value.trim() : "");
+
+  const normalizedSchool = trimmed(school);
+  const normalizedDiscord = trimmed(discord_username);
+  const normalizedMcgillEmail = trimmed(mcgill_email);
+  const normalizedSchoolOther = trimmed(school_other);
+
   if (
-    !first_name?.trim() ||
-    !last_name?.trim() ||
-    !email?.trim() ||
+    !trimmed(first_name) ||
+    !trimmed(last_name) ||
+    !trimmed(email) ||
+    !trimmed(phone_number) ||
+    !trimmed(age_group) ||
+    !normalizedSchool ||
     !mlh_code_of_conduct ||
     !mlh_privacy_policy
   ) {
@@ -74,10 +93,39 @@ export default async function handler(req = {}, res = {}) {
     return;
   }
 
+  if (normalizedSchool === "Other" && !normalizedSchoolOther) {
+    respond(res, 400, { error: "Please provide your school name." });
+    return;
+  }
+
+  if (normalizedSchool === "McGill University") {
+    if (!normalizedMcgillEmail) {
+      respond(res, 400, { error: "McGill email is required for McGill students." });
+      return;
+    }
+
+    if (!mcgillEmailRegex.test(normalizedMcgillEmail)) {
+      respond(res, 400, { error: "McGill email must end with @mcgill.ca or @mail.mcgill.ca." });
+      return;
+    }
+  }
+
+  if (normalizedDiscord && !discordRegex.test(normalizedDiscord)) {
+    respond(res, 400, { error: "Discord username must be 2-32 characters and contain only lowercase letters, numbers, dots, or underscores." });
+    return;
+  }
+
   const sanitizedPayload = {
-    first_name: String(first_name).trim(),
-    last_name: String(last_name).trim(),
-    email: String(email).trim().toLowerCase(),
+    first_name: trimmed(first_name),
+    last_name: trimmed(last_name),
+    email: trimmed(email).toLowerCase(),
+    phone_number: trimmed(phone_number),
+    age_group: trimmed(age_group),
+    school: normalizedSchool,
+    school_other: normalizedSchool === "Other" ? normalizedSchoolOther : null,
+    mcgill_email: normalizedSchool === "McGill University" ? normalizedMcgillEmail.toLowerCase() : null,
+    mcgill_student_id: normalizedSchool === "McGill University" ? trimmed(mcgill_student_id) || null : null,
+    discord_username: normalizedDiscord || null,
     mlh_code_of_conduct: Boolean(mlh_code_of_conduct),
     mlh_privacy_policy: Boolean(mlh_privacy_policy),
     mlh_emails: Boolean(mlh_emails ?? false)

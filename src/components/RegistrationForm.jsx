@@ -6,12 +6,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     email: "",
+    phone_number: "",
+    age_group: "",
+    school: "",
+    school_other: "",
+    mcgill_email: "",
+    mcgill_student_id: "",
+    discord_username: "",
     mlh_code_of_conduct: false,
     mlh_privacy_policy: false,
     mlh_emails: false
@@ -20,10 +28,53 @@ export default function RegistrationForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  const mcgillEmailRegex = /@(mcgill\.ca|mail\.mcgill\.ca)$/i;
+  const discordRegex = /^[a-z0-9._]{2,32}$/;
+  const ageGroupOptions = ["Under 18", "18-20", "21-24", "25-29", "30+"];
+  const schoolOptions = [
+    "McGill University",
+    "Concordia University",
+    "Université de Montréal",
+    "Polytechnique Montréal",
+    "Other"
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    
+
+    if (!formData.first_name.trim() || !formData.last_name.trim() || !formData.email.trim()) {
+      setError("Please complete all required fields.");
+      return;
+    }
+
+    if (!formData.phone_number.trim() || !formData.age_group || !formData.school) {
+      setError("Please complete all required fields.");
+      return;
+    }
+
+    if (formData.school === "Other" && !formData.school_other.trim()) {
+      setError("Please provide your school name.");
+      return;
+    }
+
+    if (formData.school === "McGill University") {
+      if (!formData.mcgill_email.trim()) {
+        setError("McGill email is required for McGill students.");
+        return;
+      }
+
+      if (!mcgillEmailRegex.test(formData.mcgill_email.trim())) {
+        setError("McGill email must end with @mcgill.ca or @mail.mcgill.ca.");
+        return;
+      }
+    }
+
+    if (formData.discord_username.trim() && !discordRegex.test(formData.discord_username.trim())) {
+      setError("Discord username must be 2-32 characters and contain only lowercase letters, numbers, dots, or underscores.");
+      return;
+    }
+
     // Validate required MLH checkboxes
     if (!formData.mlh_code_of_conduct || !formData.mlh_privacy_policy) {
       setError("You must agree to the MLH Code of Conduct and Privacy Policy to register.");
@@ -36,12 +87,24 @@ export default function RegistrationForm() {
       const endpoint = import.meta.env.VITE_REGISTRATION_ENDPOINT || "/api/register";
 
       if (endpoint) {
+        const payload = {
+          ...formData,
+          first_name: formData.first_name.trim(),
+          last_name: formData.last_name.trim(),
+          email: formData.email.trim(),
+          phone_number: formData.phone_number.trim(),
+          school_other: formData.school === "Other" ? formData.school_other.trim() : "",
+          mcgill_email: formData.school === "McGill University" ? formData.mcgill_email.trim() : "",
+          mcgill_student_id: formData.school === "McGill University" ? formData.mcgill_student_id.trim() : "",
+          discord_username: formData.discord_username.trim()
+        };
+
         const response = await fetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -59,6 +122,13 @@ export default function RegistrationForm() {
         first_name: "",
         last_name: "",
         email: "",
+        phone_number: "",
+        age_group: "",
+        school: "",
+        school_other: "",
+        mcgill_email: "",
+        mcgill_student_id: "",
+        discord_username: "",
         mlh_code_of_conduct: false,
         mlh_privacy_policy: false,
         mlh_emails: false
@@ -89,10 +159,10 @@ export default function RegistrationForm() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Pre-Register for <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-500">McGill AeroHacks</span>
+            Register for <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-500">AeroHacks</span>
           </h2>
           <p className="text-xl text-gray-600 mb-2">
-            Be the first to know when full registration opens!
+            Registration is open to everyone — McGill students are welcome but not required.
           </p>
           <p className="text-gray-500">
             March 13 - March 15, 2026
@@ -110,15 +180,15 @@ export default function RegistrationForm() {
               <div className="w-20 h-20 mx-auto mb-6 bg-green-500 rounded-full flex items-center justify-center">
                 <CheckCircle className="w-12 h-12 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Pre-Registration Successful!</h3>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Registration Successful!</h3>
               <p className="text-xl text-gray-600 mb-8">
-                Welcome to McGill AeroHacks! We'll email you when full registration opens with all the details you need.
+                Thanks for registering for AeroHacks! We'll follow up with event details soon.
               </p>
               <Button
                 onClick={() => setIsSuccess(false)}
                 className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700"
               >
-                Pre-Register Another Person
+                Register Another Person
               </Button>
             </motion.div>
           ) : (
@@ -129,8 +199,8 @@ export default function RegistrationForm() {
             >
               <Card className="shadow-xl border-gray-200">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Pre-Registration Information</CardTitle>
-                  <CardDescription>Enter your basic information to stay updated about McGill AeroHacks 2026. Full registration will open soon!</CardDescription>
+                  <CardTitle className="text-2xl">Registration Information</CardTitle>
+                  <CardDescription>Enter your details to register for AeroHacks.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -161,6 +231,19 @@ export default function RegistrationForm() {
                     </div>
 
                     <div className="space-y-2">
+                      <Label htmlFor="phone_number">Phone Number *</Label>
+                      <Input
+                        id="phone_number"
+                        type="tel"
+                        value={formData.phone_number}
+                        onChange={(e) => handleChange("phone_number", e.target.value)}
+                        required
+                        placeholder="+1 555 123 4567"
+                        aria-required="true"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
                       <Label htmlFor="email">Email Address *</Label>
                       <Input
                         id="email"
@@ -171,6 +254,98 @@ export default function RegistrationForm() {
                         placeholder="john.doe@example.com"
                         aria-required="true"
                       />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="age_group">Age Group *</Label>
+                        <Select
+                          value={formData.age_group}
+                          onValueChange={(value) => handleChange("age_group", value)}
+                        >
+                          <SelectTrigger id="age_group" aria-required="true">
+                            <SelectValue placeholder="Select your age group" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ageGroupOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="school">School *</Label>
+                        <Select
+                          value={formData.school}
+                          onValueChange={(value) => handleChange("school", value)}
+                        >
+                          <SelectTrigger id="school" aria-required="true">
+                            <SelectValue placeholder="Select your school" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {schoolOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {formData.school === "Other" && (
+                      <div className="space-y-2">
+                        <Label htmlFor="school_other">School Name *</Label>
+                        <Input
+                          id="school_other"
+                          value={formData.school_other}
+                          onChange={(e) => handleChange("school_other", e.target.value)}
+                          required
+                          placeholder="Your school name"
+                          aria-required="true"
+                        />
+                      </div>
+                    )}
+
+                    {formData.school === "McGill University" && (
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="mcgill_email">McGill Email *</Label>
+                          <Input
+                            id="mcgill_email"
+                            type="email"
+                            value={formData.mcgill_email}
+                            onChange={(e) => handleChange("mcgill_email", e.target.value)}
+                            required
+                            placeholder="name@mail.mcgill.ca"
+                            aria-required="true"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="mcgill_student_id">McGill Student ID (Optional)</Label>
+                          <Input
+                            id="mcgill_student_id"
+                            value={formData.mcgill_student_id}
+                            onChange={(e) => handleChange("mcgill_student_id", e.target.value)}
+                            placeholder="260123456"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label htmlFor="discord_username">Discord Username (Optional)</Label>
+                      <Input
+                        id="discord_username"
+                        value={formData.discord_username}
+                        onChange={(e) => handleChange("discord_username", e.target.value)}
+                        placeholder="username"
+                      />
+                      <p className="text-xs text-gray-500">Lowercase letters, numbers, dots, and underscores only.</p>
                     </div>
 
                     <div className="border-t border-gray-200 pt-6 space-y-4">
@@ -278,7 +453,7 @@ export default function RegistrationForm() {
                           Submitting...
                         </>
                       ) : (
-                        "Complete Pre-Registration"
+                        "Complete Registration"
                       )}
                     </Button>
                   </form>
