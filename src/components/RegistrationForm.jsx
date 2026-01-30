@@ -131,14 +131,6 @@ export default function RegistrationForm() {
       return;
     }
 
-    if (formData.team_mode === "team" && formData.captain_email.trim()) {
-      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-      if (!emailRegex.test(formData.captain_email.trim())) {
-        setError("Captain email must be a valid email address.");
-        return;
-      }
-    }
-
     if (!formData.fields_of_study.length) {
       setError("Please select at least one field of study.");
       return;

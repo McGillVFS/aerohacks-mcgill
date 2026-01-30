@@ -102,7 +102,6 @@ export default async function handler(req = {}, res = {}) {
   const normalizedDietaryRestrictions = Array.isArray(dietary_restrictions)
     ? dietary_restrictions.map((restriction) => trimmed(restriction)).filter(Boolean)
     : [];
-  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
 
   if (
     !trimmed(first_name) ||
@@ -130,11 +129,6 @@ export default async function handler(req = {}, res = {}) {
 
   if (normalizedTeamMode === "team" && !normalizedTeamName) {
     respond(res, 400, { error: "Team name is required when registering with a team." });
-    return;
-  }
-
-  if (normalizedTeamMode === "team" && normalizedCaptainEmail && !emailRegex.test(normalizedCaptainEmail)) {
-    respond(res, 400, { error: "Captain email must be a valid email address." });
     return;
   }
 
