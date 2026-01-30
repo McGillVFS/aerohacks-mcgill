@@ -65,6 +65,12 @@ export default async function handler(req = {}, res = {}) {
     mcgill_email,
     mcgill_student_id,
     discord_username,
+    team_mode,
+    team_name,
+    team_join_code,
+    fields_of_study,
+    interests,
+    other_interest,
     mlh_code_of_conduct,
     mlh_privacy_policy,
     mlh_emails
@@ -78,6 +84,16 @@ export default async function handler(req = {}, res = {}) {
   const normalizedDiscord = trimmed(discord_username);
   const normalizedMcgillEmail = trimmed(mcgill_email);
   const normalizedSchoolOther = trimmed(school_other);
+  const normalizedTeamMode = trimmed(team_mode);
+  const normalizedTeamName = trimmed(team_name);
+  const normalizedTeamJoinCode = trimmed(team_join_code);
+  const normalizedOtherInterest = trimmed(other_interest);
+  const normalizedFieldsOfStudy = Array.isArray(fields_of_study)
+    ? fields_of_study.map((field) => trimmed(field)).filter(Boolean)
+    : [];
+  const normalizedInterests = Array.isArray(interests)
+    ? interests.map((interest) => trimmed(interest)).filter(Boolean)
+    : [];
 
   if (
     !trimmed(first_name) ||
@@ -90,6 +106,31 @@ export default async function handler(req = {}, res = {}) {
     !mlh_privacy_policy
   ) {
     respond(res, 400, { error: "Missing required registration fields" });
+    return;
+  }
+
+  if (!normalizedTeamMode) {
+    respond(res, 400, { error: "Please select how you are participating." });
+    return;
+  }
+
+  if (normalizedTeamMode !== "team" && normalizedTeamMode !== "free_agent") {
+    respond(res, 400, { error: "Participation mode must be team or free agent." });
+    return;
+  }
+
+  if (normalizedTeamMode === "team" && !normalizedTeamName) {
+    respond(res, 400, { error: "Team name is required when registering with a team." });
+    return;
+  }
+
+  if (!Array.isArray(fields_of_study) || normalizedFieldsOfStudy.length === 0) {
+    respond(res, 400, { error: "Please select at least one field of study." });
+    return;
+  }
+
+  if (!Array.isArray(interests) || normalizedInterests.length === 0) {
+    respond(res, 400, { error: "Please select at least one topic of interest." });
     return;
   }
 
@@ -126,6 +167,12 @@ export default async function handler(req = {}, res = {}) {
     mcgill_email: normalizedSchool === "McGill University" ? normalizedMcgillEmail.toLowerCase() : null,
     mcgill_student_id: normalizedSchool === "McGill University" ? trimmed(mcgill_student_id) || null : null,
     discord_username: normalizedDiscord || null,
+    team_mode: normalizedTeamMode,
+    team_name: normalizedTeamMode === "team" ? normalizedTeamName : null,
+    team_join_code: normalizedTeamMode === "team" ? normalizedTeamJoinCode || null : null,
+    fields_of_study: normalizedFieldsOfStudy,
+    interests: normalizedInterests,
+    other_interest: normalizedOtherInterest || null,
     mlh_code_of_conduct: Boolean(mlh_code_of_conduct),
     mlh_privacy_policy: Boolean(mlh_privacy_policy),
     mlh_emails: Boolean(mlh_emails ?? false)

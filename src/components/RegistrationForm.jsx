@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { CheckCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,12 @@ export default function RegistrationForm() {
     mcgill_email: "",
     mcgill_student_id: "",
     discord_username: "",
+    team_mode: "",
+    team_name: "",
+    team_join_code: "",
+    fields_of_study: [],
+    interests: [],
+    other_interest: "",
     mlh_code_of_conduct: false,
     mlh_privacy_policy: false,
     mlh_emails: false
@@ -38,6 +45,35 @@ export default function RegistrationForm() {
     "Polytechnique Montréal",
     "Other"
   ];
+  const fieldsOfStudyOptions = [
+    "Aerospace Engineering",
+    "Mechanical Engineering",
+    "Electrical Engineering",
+    "Computer Engineering",
+    "Software Engineering",
+    "Computer Science",
+    "Physics",
+    "Mathematics",
+    "Biology / Life Sciences",
+    "Business / Management",
+    "Economics",
+    "Other"
+  ];
+  const interestOptions = [
+    "Drones / UAVs",
+    "Aerospace Systems",
+    "Robotics",
+    "Embedded Systems",
+    "Hardware Hacking",
+    "AI / Machine Learning",
+    "Computer Vision",
+    "Data Science",
+    "Sustainability",
+    "Healthcare / MedTech",
+    "Defense / Security",
+    "Entrepreneurship / Startups",
+    "Other"
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +86,26 @@ export default function RegistrationForm() {
 
     if (!formData.phone_number.trim() || !formData.age_group || !formData.school) {
       setError("Please complete all required fields.");
+      return;
+    }
+
+    if (!formData.team_mode) {
+      setError("Please select how you are participating.");
+      return;
+    }
+
+    if (formData.team_mode === "team" && !formData.team_name.trim()) {
+      setError("Team name is required when registering with a team.");
+      return;
+    }
+
+    if (!formData.fields_of_study.length) {
+      setError("Please select at least one field of study.");
+      return;
+    }
+
+    if (!formData.interests.length) {
+      setError("Please select at least one topic of interest.");
       return;
     }
 
@@ -96,7 +152,13 @@ export default function RegistrationForm() {
           school_other: formData.school === "Other" ? formData.school_other.trim() : "",
           mcgill_email: formData.school === "McGill University" ? formData.mcgill_email.trim() : "",
           mcgill_student_id: formData.school === "McGill University" ? formData.mcgill_student_id.trim() : "",
-          discord_username: formData.discord_username.trim()
+          discord_username: formData.discord_username.trim(),
+          team_mode: formData.team_mode,
+          team_name: formData.team_mode === "team" ? formData.team_name.trim() : "",
+          team_join_code: formData.team_mode === "team" ? formData.team_join_code.trim() : "",
+          fields_of_study: formData.fields_of_study,
+          interests: formData.interests,
+          other_interest: formData.other_interest.trim()
         };
 
         const response = await fetch(endpoint, {
@@ -129,6 +191,12 @@ export default function RegistrationForm() {
         mcgill_email: "",
         mcgill_student_id: "",
         discord_username: "",
+        team_mode: "",
+        team_name: "",
+        team_join_code: "",
+        fields_of_study: [],
+        interests: [],
+        other_interest: "",
         mlh_code_of_conduct: false,
         mlh_privacy_policy: false,
         mlh_emails: false
@@ -145,6 +213,17 @@ export default function RegistrationForm() {
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    setError("");
+  };
+
+  const toggleSelection = (field, value) => {
+    setFormData((prev) => {
+      const current = prev[field];
+      if (!Array.isArray(current)) return prev;
+      const exists = current.includes(value);
+      const nextValues = exists ? current.filter((item) => item !== value) : [...current, value];
+      return { ...prev, [field]: nextValues };
+    });
     setError("");
   };
 
@@ -296,6 +375,50 @@ export default function RegistrationForm() {
                       </div>
                     </div>
 
+                    <div className="space-y-3">
+                      <Label>How are you participating? *</Label>
+                      <RadioGroup
+                        value={formData.team_mode}
+                        onValueChange={(value) => handleChange("team_mode", value)}
+                        className="space-y-2"
+                      >
+                        <label className="flex items-center space-x-3 text-sm text-gray-700">
+                          <RadioGroupItem value="team" id="team_mode_team" />
+                          <span>I already have a team</span>
+                        </label>
+                        <label className="flex items-center space-x-3 text-sm text-gray-700">
+                          <RadioGroupItem value="free_agent" id="team_mode_free_agent" />
+                          <span>I’m looking for a team (free agent)</span>
+                        </label>
+                      </RadioGroup>
+                    </div>
+
+                    {formData.team_mode === "team" && (
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="team_name">Team Name *</Label>
+                          <Input
+                            id="team_name"
+                            value={formData.team_name}
+                            onChange={(e) => handleChange("team_name", e.target.value)}
+                            required
+                            placeholder="Team Aero"
+                            aria-required="true"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="team_join_code">Team Join Code (Optional)</Label>
+                          <Input
+                            id="team_join_code"
+                            value={formData.team_join_code}
+                            onChange={(e) => handleChange("team_join_code", e.target.value)}
+                            placeholder="AERO-2026"
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     {formData.school === "Other" && (
                       <div className="space-y-2">
                         <Label htmlFor="school_other">School Name *</Label>
@@ -346,6 +469,46 @@ export default function RegistrationForm() {
                         placeholder="username"
                       />
                       <p className="text-xs text-gray-500">Lowercase letters, numbers, dots, and underscores only.</p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label>Field(s) of study (select all that apply) *</Label>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {fieldsOfStudyOptions.map((option) => (
+                          <label key={option} className="flex items-center space-x-3 text-sm text-gray-700">
+                            <Checkbox
+                              checked={formData.fields_of_study.includes(option)}
+                              onCheckedChange={() => toggleSelection("fields_of_study", option)}
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label>What topics are you interested in? *</Label>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {interestOptions.map((option) => (
+                          <label key={option} className="flex items-center space-x-3 text-sm text-gray-700">
+                            <Checkbox
+                              checked={formData.interests.includes(option)}
+                              onCheckedChange={() => toggleSelection("interests", option)}
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="other_interest">Other interest (optional)</Label>
+                      <Input
+                        id="other_interest"
+                        value={formData.other_interest}
+                        onChange={(e) => handleChange("other_interest", e.target.value)}
+                        placeholder="Share any other interests"
+                      />
                     </div>
 
                     <div className="border-t border-gray-200 pt-6 space-y-4">
