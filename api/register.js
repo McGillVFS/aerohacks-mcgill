@@ -133,12 +133,7 @@ export default async function handler(req = {}, res = {}) {
     return;
   }
 
-  if (normalizedTeamMode === "team" && !normalizedCaptainEmail) {
-    respond(res, 400, { error: "Captain email is required when registering with a team." });
-    return;
-  }
-
-  if (normalizedTeamMode === "team" && !emailRegex.test(normalizedCaptainEmail)) {
+  if (normalizedTeamMode === "team" && normalizedCaptainEmail && !emailRegex.test(normalizedCaptainEmail)) {
     respond(res, 400, { error: "Captain email must be a valid email address." });
     return;
   }
@@ -188,7 +183,9 @@ export default async function handler(req = {}, res = {}) {
     discord_username: normalizedDiscord || null,
     team_mode: normalizedTeamMode,
     team_name: normalizedTeamMode === "team" ? normalizedTeamName : null,
-    captain_email: normalizedTeamMode === "team" ? normalizedCaptainEmail.toLowerCase() : null,
+    captain_email: normalizedTeamMode === "team" && normalizedCaptainEmail
+      ? normalizedCaptainEmail.toLowerCase()
+      : null,
     fields_of_study: normalizedFieldsOfStudy,
     interests: normalizedInterests,
     other_interest: normalizedOtherInterest || null,
@@ -201,7 +198,7 @@ export default async function handler(req = {}, res = {}) {
   };
 
   try {
-    if (normalizedTeamMode === "team") {
+    if (normalizedTeamMode === "team" && normalizedCaptainEmail) {
       const teamSizeUrl = `${supabaseTableUrl}?select=id&team_name=eq.${encodeURIComponent(normalizedTeamName)}&captain_email=eq.${encodeURIComponent(normalizedCaptainEmail.toLowerCase())}`;
       const teamSizeResponse = await fetch(teamSizeUrl, {
         method: "GET",

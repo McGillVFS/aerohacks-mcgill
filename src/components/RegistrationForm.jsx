@@ -131,12 +131,7 @@ export default function RegistrationForm() {
       return;
     }
 
-    if (formData.team_mode === "team" && !formData.captain_email.trim()) {
-      setError("Captain email is required when registering with a team.");
-      return;
-    }
-
-    if (formData.team_mode === "team") {
+    if (formData.team_mode === "team" && formData.captain_email.trim()) {
       const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
       if (!emailRegex.test(formData.captain_email.trim())) {
         setError("Captain email must be a valid email address.");
@@ -459,16 +454,15 @@ export default function RegistrationForm() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="captain_email">Captain’s Email Address *</Label>
+                          <Label htmlFor="captain_email">Captain’s Email Address</Label>
                           <Input
                             id="captain_email"
                             type="email"
                             value={formData.captain_email}
                             onChange={(e) => handleChange("captain_email", e.target.value)}
-                            required
                             placeholder="captain@example.com"
-                            aria-required="true"
                           />
+                          <p className="text-xs text-gray-500">Captain’s email (optional)</p>
                         </div>
                       </div>
                     )}
