@@ -13,7 +13,6 @@ export default function Layout({ children, currentPageName }) {
 
   const navLinks = [
     { name: "About", anchor: "about" },
-    { name: "Schedule", anchor: "schedule" },
     { name: "Prizes", anchor: "prizes" },
     { name: "Sponsors", anchor: "sponsors" },
     { name: "Register", anchor: "register", highlight: true }
