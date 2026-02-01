@@ -147,10 +147,10 @@ export default function Home() {
           <FAQ />
         </div>
 
-        {/* Schedule Section */}
-        <div id="schedule">
+        {/* Schedule Section - HIDDEN */}
+        {/* <div id="schedule">
           <Schedule />
-        </div>
+        </div> */}
 
         {/* Venue Section */}
         <div id="venue">
