@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -16,9 +16,11 @@ export default function RegistrationForm() {
     last_name: "",
     email: "",
     phone_number: "",
-    age_group: "",
+    age: "",
     school: "",
     school_other: "",
+    level_of_study: "",
+    country_of_residence: "",
     mcgill_email: "",
     mcgill_student_id: "",
     discord_username: "",
@@ -41,7 +43,214 @@ export default function RegistrationForm() {
 
   const mcgillEmailRegex = /@(mcgill\.ca|mail\.mcgill\.ca)$/i;
   const discordRegex = /^[a-z0-9._]{2,32}$/;
-  const ageGroupOptions = ["Under 18", "18-20", "21-24", "25-29", "30+"];
+  const ageOptions = Array.from({ length: 88 }, (_, index) => 13 + index);
+  const levelOfStudyOptions = [
+    "Less than Secondary / High School",
+    "Secondary / High School",
+    "Undergraduate University (2 year - community college or similar)",
+    "Undergraduate University (3+ year)",
+    "Graduate University (Masters, Professional, Doctoral, etc)",
+    "Code School / Bootcamp",
+    "Other Vocational / Trade Program or Apprenticeship",
+    "Post Doctorate",
+    "Other",
+    "I’m not currently a student",
+    "Prefer not to answer"
+  ];
+  const countryOptions = [
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei Darussalam",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cabo Verde",
+    "Cambodia",
+    "Cameroon",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo",
+    "Congo (Democratic Republic of the)",
+    "Costa Rica",
+    "Côte d'Ivoire",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czechia",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Eswatini",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Grenada",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran (Islamic Republic of)",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Korea (Democratic People's Republic of)",
+    "Korea (Republic of)",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Lao People's Democratic Republic",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia (Federated States of)",
+    "Moldova (Republic of)",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Myanmar",
+    "Namibia",
+    "Nauru",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "North Macedonia",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russian Federation",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent and the Grenadines",
+    "Samoa",
+    "San Marino",
+    "Sao Tome and Principe",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Sweden",
+    "Switzerland",
+    "Syrian Arab Republic",
+    "Tajikistan",
+    "Tanzania, United Republic of",
+    "Thailand",
+    "Timor-Leste",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom of Great Britain and Northern Ireland",
+    "United States of America",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Venezuela (Bolivarian Republic of)",
+    "Viet Nam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe"
+  ];
   const schoolOptions = [
     "McGill University",
     "Concordia University",
@@ -116,7 +325,23 @@ export default function RegistrationForm() {
       return;
     }
 
-    if (!formData.phone_number.trim() || !formData.age_group || !formData.school) {
+    if (!formData.phone_number.trim() || !formData.age || !formData.school) {
+      setError("Please complete all required fields.");
+      return;
+    }
+
+    const parsedAge = Number.parseInt(formData.age, 10);
+    if (Number.isNaN(parsedAge) || parsedAge < 13) {
+      setError("Please select a valid age (13 or older).");
+      return;
+    }
+
+    if (!formData.level_of_study) {
+      setError("Please select your level of study.");
+      return;
+    }
+
+    if (!formData.country_of_residence) {
       setError("Please complete all required fields.");
       return;
     }
@@ -181,7 +406,10 @@ export default function RegistrationForm() {
           last_name: formData.last_name.trim(),
           email: formData.email.trim(),
           phone_number: formData.phone_number.trim(),
+          age: parsedAge,
           school_other: formData.school === "Other" ? formData.school_other.trim() : "",
+          level_of_study: formData.level_of_study,
+          country_of_residence: formData.country_of_residence,
           mcgill_email: formData.school === "McGill University" ? formData.mcgill_email.trim() : "",
           mcgill_student_id: formData.school === "McGill University" ? formData.mcgill_student_id.trim() : "",
           discord_username: formData.discord_username.trim(),
@@ -220,9 +448,11 @@ export default function RegistrationForm() {
         last_name: "",
         email: "",
         phone_number: "",
-        age_group: "",
+        age: "",
         school: "",
         school_other: "",
+        level_of_study: "",
+        country_of_residence: "",
         mcgill_email: "",
         mcgill_student_id: "",
         discord_username: "",
@@ -375,17 +605,17 @@ export default function RegistrationForm() {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="age_group">Age Group *</Label>
+                        <Label htmlFor="age">Age *</Label>
                         <Select
-                          value={formData.age_group}
-                          onValueChange={(value) => handleChange("age_group", value)}
+                          value={formData.age}
+                          onValueChange={(value) => handleChange("age", value)}
                         >
-                          <SelectTrigger id="age_group" aria-required="true">
-                            <SelectValue placeholder="Select your age group" />
+                          <SelectTrigger id="age" aria-required="true">
+                            <SelectValue placeholder="Select your age" />
                           </SelectTrigger>
                           <SelectContent>
-                            {ageGroupOptions.map((option) => (
-                              <SelectItem key={option} value={option}>
+                            {ageOptions.map((option) => (
+                              <SelectItem key={option} value={option.toString()}>
                                 {option}
                               </SelectItem>
                             ))}
@@ -404,6 +634,48 @@ export default function RegistrationForm() {
                           </SelectTrigger>
                           <SelectContent>
                             {schoolOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="level_of_study">Level of Study *</Label>
+                        <Select
+                          value={formData.level_of_study}
+                          onValueChange={(value) => handleChange("level_of_study", value)}
+                        >
+                          <SelectTrigger id="level_of_study" aria-required="true">
+                            <SelectValue placeholder="Select your level of study" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {levelOfStudyOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="country_of_residence">Country of Residence *</Label>
+                        <Select
+                          value={formData.country_of_residence}
+                          onValueChange={(value) => handleChange("country_of_residence", value)}
+                        >
+                          <SelectTrigger id="country_of_residence" aria-required="true">
+                            <SelectValue placeholder="Select your country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Canada">Canada</SelectItem>
+                            <SelectSeparator />
+                            {countryOptions.map((option) => (
                               <SelectItem key={option} value={option}>
                                 {option}
                               </SelectItem>
