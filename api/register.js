@@ -59,9 +59,11 @@ export default async function handler(req = {}, res = {}) {
     last_name,
     email,
     phone_number,
-    age_group,
+    age,
     school,
     school_other,
+    level_of_study,
+    country_of_residence,
     mcgill_email,
     mcgill_student_id,
     discord_username,
@@ -90,6 +92,8 @@ export default async function handler(req = {}, res = {}) {
   const normalizedTeamMode = trimmed(team_mode);
   const normalizedTeamName = trimmed(team_name);
   const normalizedCaptainEmail = trimmed(captain_email);
+  const normalizedLevelOfStudy = trimmed(level_of_study);
+  const normalizedCountryOfResidence = trimmed(country_of_residence);
   const normalizedOtherInterest = trimmed(other_interest);
   const normalizedOtherDietary = trimmed(other_dietary);
   const normalizedAccessibilityNeeds = trimmed(accessibility_needs);
@@ -108,12 +112,21 @@ export default async function handler(req = {}, res = {}) {
     !trimmed(last_name) ||
     !trimmed(email) ||
     !trimmed(phone_number) ||
-    !trimmed(age_group) ||
+    age === undefined ||
+    age === null ||
     !normalizedSchool ||
+    !normalizedLevelOfStudy ||
+    !normalizedCountryOfResidence ||
     !mlh_code_of_conduct ||
     !mlh_privacy_policy
   ) {
     respond(res, 400, { error: "Missing required registration fields" });
+    return;
+  }
+
+  const parsedAge = Number.parseInt(age, 10);
+  if (Number.isNaN(parsedAge) || parsedAge < 13) {
+    respond(res, 400, { error: "Age must be a number of 13 or older." });
     return;
   }
 
@@ -169,9 +182,11 @@ export default async function handler(req = {}, res = {}) {
     last_name: trimmed(last_name),
     email: trimmed(email).toLowerCase(),
     phone_number: trimmed(phone_number),
-    age_group: trimmed(age_group),
+    age: parsedAge,
     school: normalizedSchool,
     school_other: normalizedSchool === "Other" ? normalizedSchoolOther : null,
+    level_of_study: normalizedLevelOfStudy,
+    country_of_residence: normalizedCountryOfResidence,
     mcgill_email: normalizedSchool === "McGill University" ? normalizedMcgillEmail.toLowerCase() : null,
     mcgill_student_id: normalizedSchool === "McGill University" ? trimmed(mcgill_student_id) || null : null,
     discord_username: normalizedDiscord || null,
@@ -250,4 +265,3 @@ export default async function handler(req = {}, res = {}) {
     console.error("Supabase registration error", error);
   }
 }
-
