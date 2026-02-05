@@ -10,6 +10,7 @@ import Accommodations from "../components/Accommodations";
 import Prizes from "../components/Prizes";
 import RegistrationForm from "../components/RegistrationForm";
 import Contact from "../components/Contact";
+import MLHBadge from "../components/MLHBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Trophy, Users, Code, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -101,13 +102,14 @@ export default function Home() {
       <div className="min-h-screen bg-black relative">
         <AnimatedBackground />
         <Hero onRegisterClick={() => window.location.href = createPageUrl("Register")} />
+        {!isLoading && <MLHBadge />}
         
         {/* Quick Highlights */}
         <section className="py-20 px-6 bg-gradient-to-b from-black via-gray-900 to-black relative overflow-hidden">
           <div className="absolute inset-0 opacity-10" aria-hidden="true">
             <div className="absolute inset-0" style={{
               backgroundImage: `linear-gradient(to right, rgba(0, 0, 255, 0.3) 1px, transparent 1px),
-                               linear-gradient(to bottom, rgba(0, 0, 255, 0.3) 1px, transparent 1px)`,
+                               linear-gradient(to bottom, rgba(81, 81, 86, 0.3) 1px, transparent 1px)`,
               backgroundSize: '60px 60px'
             }} />
           </div>
