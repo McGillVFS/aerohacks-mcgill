@@ -1,3 +1,6 @@
+import { createClient } from '@supabase/supabase-js'
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/registrations` : null;
@@ -9,6 +12,152 @@ const allowHeaders = [
   "Authorization",
   "Prefer"
 ];
+
+/*function sendEmail(firstname, lastname, email) {
+  await fetch(`${process.env.SUPABASE_URL}/functions/v1/send-email`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${supabaseServiceRoleKey}`
+  },
+  body: JSON.stringify({
+    to: email,
+    subject: "Welcome to Aerohacks!!",
+    html: emailHTML(...)
+  })
+});
+ 
+}*/
+
+async function sendEmailReg(first, email) {
+  const { data, error } = await supabase.functions.invoke('send-email', {
+    body: { 
+      name: 'Functions',
+      to: email,
+      subject: `Welcome to Aerohacks ${first}!`,
+      html: generateRegEmailHTML(first)
+    },
+  })
+}
+
+const generateRegEmailHTML = (first) => {
+  ```
+  <!DOCTYPE html>
+
+  <html>
+    <head>
+      <meta charset="UTF-8">
+    </head>
+
+    <body style="margin:0; padding:0; background-color:#000000; font-family:Arial, Helvetica, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#000000; padding:32px 0;">
+        <tr>
+          <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color:#000000; padding:32px; color:#ffffff;">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom:28px;">
+              <img 
+                src="https://fqbmztbicnxbmhbgncie.supabase.co/storage/v1/object/public/mcgillaerohacks/aerohackslogo.png"
+                alt="McGill AeroHacks 2026"
+                width="220"
+                style="display:block; border:0; outline:none;"
+              />
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="font-size:16px; line-height:1.65; color:#eaeaea;">
+              <p>Hi ${first},</p>
+
+              <p>
+                Thank you for registering for <strong>McGill AeroHacks 2026</strong>,
+                happening <strong>Friday, March 13 to Sunday, March 15</strong>.
+                We’re excited to have you join us for our inaugural hackathon and
+                have a jam-packed weekend in store for you.
+              </p>
+
+              <p>
+                Our <strong>Discord server</strong> is the primary hub for all event communication,
+                including announcements, team formation, schedules, and day-of logistics.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Discord Button -->
+          <tr>
+            <td align="center" style="padding:28px 0;">
+              <a 
+                href="https://discord.gg/254hejcdms"
+                style="
+                  background-color:#0b1cff;
+                  color:#ffffff;
+                  text-decoration:none;
+                  padding:14px 26px;
+                  border-radius:4px;
+                  font-weight:bold;
+                  font-size:15px;
+                  display:inline-block;
+                "
+              >
+                Join the Discord
+              </a>
+            </td>
+          </tr>
+
+          <!-- Info -->
+          <tr>
+            <td style="font-size:15px; line-height:1.6; color:#d6d6d6;">
+              <p>
+                More details - including the full schedule, workshops, and what to bring -
+                will be shared closer to the event via <strong>Discord and email</strong>.
+              </p>
+
+              <p>
+                If you have any questions in the meantime or need to update your registration
+                details, feel free to contact us at
+                <a href="mailto:aerialdesign@mcgilleus.ca" style="color:#ff2b2b; text-decoration:none;">
+                  aerialdesign@mcgilleus.ca
+                </a>.
+              </p>
+
+              <p>We’re looking forward to seeing you in March.</p>
+
+              <p style="margin-top:28px;">
+                Best,<br>
+                <strong>The McGill AeroHacks Team</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top:1px solid #111; padding-top:20px; font-size:12px; color:#777;">
+              <p style="margin:0;">
+                McGill AeroHacks 2026 · Organized by McGill Aerial Design<br>
+                <a href="https://www.mcgillaerohacks.com" style="color:#0b1cff; text-decoration:none;">
+                  www.mcgillaerohacks.com
+                </a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+    </body>
+  </html>
+    ```
+
+
+
+}
+
+
 
 function respond(res, status, payload) {
   res.statusCode = status;
