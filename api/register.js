@@ -1,8 +1,12 @@
-import { createClient } from '@supabase/supabase-js'
+/* eslint-env node */
+/* global process */
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+const supabase = supabaseUrl && supabaseServiceRoleKey
+  ? createClient(supabaseUrl, supabaseServiceRoleKey)
+  : null;
 const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/registrations` : null;
 
 const allowHeaders = [
@@ -13,37 +17,38 @@ const allowHeaders = [
   "Prefer"
 ];
 
-/*function sendEmail(firstname, lastname, email) {
-  await fetch(`${process.env.SUPABASE_URL}/functions/v1/send-email`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${supabaseServiceRoleKey}`
-  },
-  body: JSON.stringify({
-    to: email,
-    subject: "Welcome to Aerohacks!!",
-    html: emailHTML(...)
-  })
-});
- 
-}*/
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 async function sendEmailReg(first, email) {
-  const { data, error } = await supabase.functions.invoke('send-email', {
-    body: { 
-      name: 'Functions',
+  if (!supabase) {
+    throw new Error("Supabase client is not configured");
+  }
+
+  const { error } = await supabase.functions.invoke("send-email", {
+    body: {
+      name: "Functions",
       to: email,
       subject: `Welcome to Aerohacks ${first}!`,
       html: generateRegEmailHTML(first)
-    },
-  })
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
 }
 
 const generateRegEmailHTML = (first) => {
-  ```
-  <!DOCTYPE html>
+  const safeFirst = escapeHtml(first || "there");
 
+  return `<!DOCTYPE html>
   <html>
     <head>
       <meta charset="UTF-8">
@@ -70,12 +75,12 @@ const generateRegEmailHTML = (first) => {
           <!-- Body -->
           <tr>
             <td style="font-size:16px; line-height:1.65; color:#eaeaea;">
-              <p>Hi ${first},</p>
+              <p>Hi ${safeFirst},</p>
 
               <p>
                 Thank you for registering for <strong>McGill AeroHacks 2026</strong>,
                 happening <strong>Friday, March 13 to Sunday, March 15</strong>.
-                We’re excited to have you join us for our inaugural hackathon and
+                We're excited to have you join us for our inaugural hackathon and
                 have a jam-packed weekend in store for you.
               </p>
 
@@ -123,7 +128,7 @@ const generateRegEmailHTML = (first) => {
                 </a>.
               </p>
 
-              <p>We’re looking forward to seeing you in March.</p>
+              <p>We're looking forward to seeing you in March.</p>
 
               <p style="margin-top:28px;">
                 Best,<br>
@@ -136,7 +141,7 @@ const generateRegEmailHTML = (first) => {
           <tr>
             <td style="border-top:1px solid #111; padding-top:20px; font-size:12px; color:#777;">
               <p style="margin:0;">
-                McGill AeroHacks 2026 · Organized by McGill Aerial Design<br>
+                McGill AeroHacks 2026 &middot; Organized by McGill Aerial Design<br>
                 <a href="https://www.mcgillaerohacks.com" style="color:#0b1cff; text-decoration:none;">
                   www.mcgillaerohacks.com
                 </a>
@@ -151,11 +156,8 @@ const generateRegEmailHTML = (first) => {
 
     </body>
   </html>
-    ```
-
-
-
-}
+  `;
+};
 
 
 
@@ -408,7 +410,16 @@ export default async function handler(req = {}, res = {}) {
       return;
     }
 
-    respond(res, 200, { success: true });
+    let emailSent = false;
+
+    try {
+      await sendEmailReg(sanitizedPayload.first_name, sanitizedPayload.email);
+      emailSent = true;
+    } catch (emailError) {
+      console.error("Registration email error", emailError);
+    }
+
+    respond(res, 200, { success: true, email_sent: emailSent });
   } catch (error) {
     respond(res, 500, { error: "Unexpected server error" });
     console.error("Supabase registration error", error);
