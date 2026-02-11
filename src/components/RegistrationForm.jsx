@@ -433,8 +433,18 @@ export default function RegistrationForm() {
         });
 
         if (!response.ok) {
-          const { error: responseError } = await response.json().catch(() => ({}));
-          throw new Error(responseError || "Registration request failed");
+          const status = response.status;
+          let responseError = "";
+
+          try {
+            const json = await response.json();
+            responseError = typeof json?.error === "string" ? json.error : "";
+          } catch {
+            responseError = (await response.text().catch(() => "")).trim();
+          }
+
+          const errorMessage = responseError || "Registration request failed";
+          throw new Error(`Registration failed (HTTP ${status}): ${errorMessage}`);
         }
       } else {
         // Fallback to a client-only success flow when no endpoint is configured
@@ -529,7 +539,7 @@ export default function RegistrationForm() {
               </div>
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Registration Successful!</h3>
               <p className="text-xl text-gray-600 mb-8">
-                Thanks for registering for AeroHacks! We'll follow up with event details soon.
+                Thanks for registering for AeroHacks! We&apos;ll follow up with event details soon.
               </p>
               <Button
                 onClick={() => setIsSuccess(false)}
