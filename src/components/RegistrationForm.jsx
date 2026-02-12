@@ -524,6 +524,9 @@ export default function RegistrationForm() {
           <p className="text-gray-500">
             March 13 - March 15, 2026
           </p>
+          <p className="text-sm text-amber-700 mt-2">
+            Please note: AeroHacks is a non-overnight event. Overnight stays at the venue are not available.
+          </p>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -541,12 +544,26 @@ export default function RegistrationForm() {
               <p className="text-xl text-gray-600 mb-8">
                 Thanks for registering for AeroHacks! We&apos;ll follow up with event details soon.
               </p>
-              <Button
-                onClick={() => setIsSuccess(false)}
-                className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700"
-              >
-                Register Another Person
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  asChild
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  <a
+                    href="https://discord.gg/254hejcdms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Join our Discord server
+                  </a>
+                </Button>
+                <Button
+                  onClick={() => setIsSuccess(false)}
+                  className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700"
+                >
+                  Register Another Person
+                </Button>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -870,7 +887,7 @@ export default function RegistrationForm() {
 
                     <div className="border-t border-gray-200 pt-6 space-y-4">
                       <p className="text-sm text-gray-600 mb-4">
-                        We are currently in the process of partnering with MLH. The following checkboxes are for this partnership. If we do not end up partnering with MLH, your information will not be shared.
+                        AeroHacks is an official MLH member event. The following checkboxes are required to complete your registration.
                       </p>
 
                       <div className="flex items-start space-x-3">
