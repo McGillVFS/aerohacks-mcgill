@@ -35,7 +35,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-black">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b-2 border-cyan-500/50 shadow-lg shadow-cyan-500/20" role="navigation" aria-label="Main navigation">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
+        <div className="w-full mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center gap-3 group" aria-label="McGill AeroHacks Home">
@@ -46,7 +46,7 @@ export default function Layout({ children, currentPageName }) {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 pl-10">
                 <span className="text-base md:text-xl font-bold text-white block truncate uppercase tracking-wide">McGill AeroHacks</span>
                 <p className="text-[10px] md:text-xs text-red-500 font-mono">03/13-03/15</p>
               </div>
