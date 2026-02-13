@@ -40,12 +40,6 @@ export default function Layout({ children, currentPageName }) {
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center gap-3 group" aria-label="McGill AeroHacks Home">
               <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
-                {/* Note: Image is hidden under MLH badge! */}
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6902cf6648cb3b2094dab1d3/20a0e3da0_DateAdjustedafterthispage-2.png"
-                  alt="McGill AeroHacks Logo"
-                  className="w-full h-full object-contain"
-                />
               </div>
               <div className="min-w-0 pl-10">
                 <span className="text-base md:text-xl font-bold text-white block truncate uppercase tracking-wide">McGill AeroHacks</span>
