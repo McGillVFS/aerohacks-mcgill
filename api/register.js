@@ -252,7 +252,7 @@ export default async function handler(req = {}, res = {}) {
       const isConflict = response.status === 409;
       const errorText = await response.text();
       const errorMessage = isConflict
-        ? "This email is already registered."
+        ? "This email is already registered. If you believe this is a mistake, please contact us at aerialdesign@mcgilleus.ca."
         : "Failed to save registration";
 
       respond(res, isConflict ? 409 : 500, { error: errorMessage, details: errorText });
