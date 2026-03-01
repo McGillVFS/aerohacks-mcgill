@@ -5,29 +5,29 @@ import { Calendar, Clock } from "lucide-react";
 const scheduleData = [
   {
     day: "Day 1 - Friday, March 13",
-    format: "Hybrid",
+    format: "In Person",
     events: [
-      { time: "All Day", title: "Virtual Onboarding & Team Formation", description: "Join online sessions to meet your team and get started" },
-      { time: "All Day", title: "Virtual Workshops", description: "Learn drone programming basics and essential tools" },
-      { time: "4:00 PM - 5:00 PM", title: "Opening Ceremony (In-Person)", description: "Kick off the hackathon at McGill University", highlight: true }
+      { time: "5:30 PM - 7 PM", title: "Event Hours", description: "Check in, meet other participants, and kick off the weekend", highlight: true },
+      { time: "During Event Hours", title: "Opening Ceremony", description: "Welcome session and event overview at McGill University" },
+      { time: "During Event Hours", title: "Team Formation & Orientation", description: "Find teammates and get ready to build" }
     ]
   },
   {
     day: "Day 2 - Saturday, March 14",
     format: "In Person",
     events: [
-      { time: "All Day", title: "Hands-On Drone Programming", description: "Work with ESP32-powered drones on your project" },
-      { time: "All Day", title: "Hacking Sessions", description: "Build, code, and innovate with your team" },
-      { time: "Throughout", title: "Workshops & Mentorship", description: "Expert-led sessions and one-on-one guidance" }
+      { time: "10 AM - 4 PM", title: "Event Hours", description: "Main hacking day with workshops and mentor support", highlight: true },
+      { time: "During Event Hours", title: "Hands-On Drone Programming", description: "Work with ESP32-powered drones on your project" },
+      { time: "During Event Hours", title: "Workshops & Mentorship", description: "Expert-led sessions and one-on-one guidance" }
     ]
   },
   {
     day: "Day 3 - Sunday, March 15",
     format: "In Person",
     events: [
-      { time: "Morning", title: "Final Hacking & Testing", description: "Polish your project and prepare for demos" },
-      { time: "Afternoon", title: "Project Judging", description: "Present your drone innovations to our panel" },
-      { time: "Evening", title: "Closing Ceremony & Awards", description: "Celebrate achievements and announce winners" }
+      { time: "10 AM - 4 PM", title: "Event Hours", description: "Final build day, judging, and closing activities", highlight: true },
+      { time: "During Event Hours", title: "Final Hacking & Testing", description: "Polish your project and prepare for demos" },
+      { time: "During Event Hours", title: "Project Judging & Awards", description: "Present your work and celebrate top teams" }
     ]
   }
 ];
@@ -47,7 +47,7 @@ export default function Schedule() {
             Event <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-500">Schedule</span>
           </h2>
           <p className="text-xl text-gray-600">
-            Inaugural edition: Hybrid virtual kickoff on Friday, full in-person Saturday-Sunday at McGill
+            Friday kickoff and full weekend programming sessions at McGill University
           </p>
         </motion.div>
 
@@ -118,7 +118,7 @@ export default function Schedule() {
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-2 text-gray-900">More Details Coming Soon</h3>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Specific workshop times, meal schedules, and networking activities will be announced closer to the event. 
+                Specific workshop times and networking activities will be announced closer to the event. 
                 Make sure to join our Discord for real-time updates!
               </p>
             </CardContent>

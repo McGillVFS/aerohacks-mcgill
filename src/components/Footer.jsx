@@ -76,7 +76,12 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t-2 border-blue-500/30">
-          <p className="text-red-500 font-bold font-mono">01/30-02/01</p>
+          <div className="text-center md:text-left">
+            <p className="text-red-500 font-bold font-mono">March 13th - March 15th</p>
+            <p className="text-gray-400 text-xs font-mono mt-1">
+              Fri Mar 13: 5:30 PM - 7 PM | Sat Mar 14: 10 AM - 4 PM | Sun Mar 15: 10 AM - 4 PM
+            </p>
+          </div>
           <p className="text-gray-500 text-sm font-mono">
             © 2026 McGill Aerial Design. All rights reserved.
           </p>

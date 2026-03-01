@@ -8,7 +8,7 @@ export default function SchedulePage() {
     <>
       <SEO
         title="Schedule & Venue | McGill AeroHacks 2026"
-        description="View the McGill AeroHacks schedule and venue information. January 30 - February 1, 2026 at McGill University, Montreal. Workshops, coding sessions, and networking events."
+        description="View the McGill AeroHacks schedule and venue information. March 13 - March 15, 2026 at McGill University, Montreal. Friday 5:30 PM - 7 PM, Saturday 10 AM - 4 PM, and Sunday 10 AM - 4 PM."
         keywords="McGill AeroHacks schedule, event timeline, venue information, McGill University location, hackathon agenda, Montreal events 2026"
       />
       

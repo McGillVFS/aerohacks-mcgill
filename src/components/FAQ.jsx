@@ -29,11 +29,11 @@ const faqs = [
   },
   {
     question: "What should I bring?",
-    answer: "Bring your laptop, chargers, and any personal items you need. We'll provide the drones, workspace, meals, and all the equipment you need for the hackathon. Don't forget to bring your enthusiasm and creativity!"
+    answer: "Bring your laptop, chargers, and any personal items you need. We'll provide the drones, workspace, all required equipment, plus breakfast, lunch, and snacks during event hours. Dinner is not provided, but participants will have access to exclusive offers at neighbouring restaurants. Don't forget to bring your enthusiasm and creativity!"
   },
   {
     question: "Is there a registration fee?",
-    answer: "No! McGill AeroHacks is completely free to attend. We'll provide meals, snacks, and all necessary equipment throughout the event."
+    answer: "No! McGill AeroHacks is completely free to attend."
   },
   {
     question: "Will there be prizes?",
