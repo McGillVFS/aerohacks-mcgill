@@ -189,18 +189,28 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
               {[
+                { name: "CAE", logo: "/sponsors/cae.svg", website: "https://www.cae.com/"},
                 { name: "NordVPN", logo: "/sponsors/nord/nordvpn.png", website: "https://nordvpn.com/hackathons"},
                 { name: "NordPass", logo: "/sponsors/nord/nordpass.png", website: "https://nordpass.com/"},
                 { name: "NordProtect", logo: "/sponsors/nord/nordprotect.png", website: "https://nordprotect.com/"},
+                { name: "NordSecurity", logo: "/sponsors/nord/nordsecurity.png", website: "https://nordsecurity.com/"},               
                 { name: "Incogni", logo: "/sponsors/nord/incogni.png", website: "https://incogni.com/"},
                 { name: "Saily", logo: "/sponsors/nord/saily.png", website: "https://saily.com/"},
                 { name: "NexosAi", logo: "/sponsors/nord/nexosai.png", website: "https://nexos.ai/ "},
                 { name: "Bell", logo: "/sponsors/bell.png", website: "https://www.bellflight.com" },
                 { name: "Airbus", logo: "/sponsors/airbus.png", website: "https://www.airbus.com" },
+                { name: "Pratt & Whitney Canada", logo: "/sponsors/prattwhitney.svg", website: "https://www.rtx.com/en/prattwhitney" },
                 { name: "OnShape", logo: "/sponsors/onshape.png", website: "https://www.onshape.com" },
                 { name: "Polymaker", logo: "/sponsors/polymaker.png", website: "https://www.polymaker.com" },
                 { name: "Dragonplate", logo: "/sponsors/dragonplate.png", website: "https://www.dragonplate.com" },
-                { name: "4imprint", logo: "/sponsors/4imprint.png", website: "https://www.4imprint.com" }
+                { name: "4imprint", logo: "/sponsors/4imprint.png", website: "https://www.4imprint.com" },
+                { name: "MeDo", logo: "/sponsors/medo.png", website: "https://medo.dev/" },
+                { name: "MongoDB", logo: "/sponsors/mongodb.png", website: "https://www.mongodb.com/" },
+                { name: "ElevenLabs", logo: "/sponsors/elevenlabs.png", website: "https://elevenlabs.io/" },
+                { name: "Solana", logo: "/sponsors/solana.png", website: "https://solana.com/" },
+                { name: "Gemini", logo: "/sponsors/gemini.jpg", website: "https://gemini.google.com/app" },  
+                { name: "Celsius", logo: "/sponsors/celsius.png", website: "https://www.celsius.com/" },                 
+
               ].map((sponsor, index) => (
                 <motion.div
                   key={sponsor.name}
