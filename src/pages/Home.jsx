@@ -187,21 +187,42 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <div className="flex justify-center mb-12">
-                <img
-                  src="/sponsors/all_sponsors.png"
-                  alt="Sponsors"
-                  className="w-full max-w-2xl h-auto rounded-xl"
-                />
-              </div>
-            </motion.div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+              {[
+                { name: "NordVPN", logo: "/sponsors/nord/nordvpn.png", website: "https://nordvpn.com/hackathons"},
+                { name: "NordPass", logo: "/sponsors/nord/nordpass.png", website: "https://nordpass.com/"},
+                { name: "NordProtect", logo: "/sponsors/nord/nordprotect.png", website: "https://nordprotect.com/"},
+                { name: "Incogni", logo: "/sponsors/nord/incogni.png", website: "https://incogni.com/"},
+                { name: "Saily", logo: "/sponsors/nord/saily.png", website: "https://saily.com/"},
+                { name: "NexosAi", logo: "/sponsors/nord/nexosai.png", website: "https://nexos.ai/ "},
+                { name: "Bell", logo: "/sponsors/bell.png", website: "https://www.bellflight.com" },
+                { name: "Airbus", logo: "/sponsors/airbus.png", website: "https://www.airbus.com" },
+                { name: "OnShape", logo: "/sponsors/onshape.png", website: "https://www.onshape.com" },
+                { name: "Polymaker", logo: "/sponsors/polymaker.png", website: "https://www.polymaker.com" },
+                { name: "Dragonplate", logo: "/sponsors/dragonplate.png", website: "https://www.dragonplate.com" },
+                { name: "4imprint", logo: "/sponsors/4imprint.png", website: "https://www.4imprint.com" }
+              ].map((sponsor, index) => (
+                <motion.div
+                  key={sponsor.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <a href={sponsor.website} target="_blank" rel="sponsored noopener noreferrer" className="block group">
+                    <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 h-40 flex flex-col items-center justify-center relative overflow-hidden border-2 border-transparent group-hover:border-cyan-500">
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-cyan-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <img src={sponsor.logo} alt={`${sponsor.name} logo`} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300 relative z-10" />
+                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                        <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center shadow-lg">
+                          <ExternalLink className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </motion.div>
+              ))}
+            </div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
