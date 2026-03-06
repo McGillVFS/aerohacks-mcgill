@@ -209,7 +209,9 @@ export default function Home() {
                 { name: "ElevenLabs", logo: "/sponsors/elevenlabs.png", website: "https://elevenlabs.io/" },
                 { name: "Solana", logo: "/sponsors/solana.png", website: "https://solana.com/" },
                 { name: "Gemini", logo: "/sponsors/gemini.jpg", website: "https://gemini.google.com/app" },  
-                { name: "Celsius", logo: "/sponsors/celsius.png", website: "https://www.celsius.com/" },                 
+                { name: "Celsius", logo: "/sponsors/celsius.png", website: "https://www.celsius.com/" },
+                { name: "Snowflake", logo: "/sponsors/snowflake.png", website: "https://www.snowflake.com/en/" },
+                { name: "SSMU", logo: "/sponsors/ssmu.png", website: "https://ssmu.ca/" },                                 
 
               ].map((sponsor, index) => (
                 <motion.div
