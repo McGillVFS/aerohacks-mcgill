@@ -4,7 +4,7 @@ import { Calendar, MapPin, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import CountdownTimer from "./CountdownTimer";
 
-export default function Hero({ onRegisterClick }) {
+export default function Hero({ onRegisterClick, registrationOpen }) {
   const videoRef = useState(null);
   const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
 
@@ -158,10 +158,11 @@ export default function Hero({ onRegisterClick }) {
               <Button
                 onClick={onRegisterClick}
                 size="lg"
+                disabled={!registrationOpen}
                 className="bg-red-600 hover:bg-red-700 text-white px-6 md:px-8 py-4 md:py-6 text-sm md:text-lg rounded font-bold w-full sm:w-auto border-2 border-red-500 shadow-lg shadow-red-500/50 transition-all duration-300 hover:shadow-red-500/70"
-                aria-label="Register for McGill AeroHacks"
+                aria-label={registrationOpen ? "Register for McGill AeroHacks" : "Registration for McGill AeroHacks is closed"}
               >
-                REGISTER NOW
+                {registrationOpen ? "REGISTER NOW" : "REGISTRATION CLOSED"}
               </Button>
               <Button
                 size="lg"

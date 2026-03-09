@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { REGISTRATION_OPEN } from "../lib/registration";
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Layout({ children, currentPageName }) {
     { name: "About", anchor: "about" },
     { name: "Prizes", anchor: "prizes" },
     { name: "Sponsors", anchor: "sponsors" },
-    { name: "Register", anchor: "register", highlight: true }
+    { name: REGISTRATION_OPEN ? "Register" : "Registration", anchor: "register", highlight: REGISTRATION_OPEN }
   ];
 
   const scrollToSection = (anchor) => {

@@ -9,6 +9,7 @@ import Venue from "../components/Venue";
 import Accommodations from "../components/Accommodations";
 import Prizes from "../components/Prizes";
 import RegistrationForm from "../components/RegistrationForm";
+import RegistrationClosed from "../components/RegistrationClosed";
 import Contact from "../components/Contact";
 import MLHBadge from "../components/MLHBadge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,6 +22,7 @@ import StructuredData from "../components/StructuredData";
 import AnimatedBackground from "../components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 import { Mail, FileText, ExternalLink } from "lucide-react";
+import { REGISTRATION_OPEN } from "../lib/registration";
 
 const highlights = [
   {
@@ -75,7 +77,7 @@ const structuredData = {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "CAD",
-    "availability": "https://schema.org/InStock",
+    "availability": REGISTRATION_OPEN ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
     "url": "https://mcgillaerohacks.com/Register"
   }
 };
@@ -101,7 +103,10 @@ export default function Home() {
 
       <div className="min-h-screen bg-black relative">
         <AnimatedBackground />
-        <Hero onRegisterClick={() => window.location.href = createPageUrl("Register")} />
+        <Hero
+          onRegisterClick={() => window.location.href = createPageUrl("Register")}
+          registrationOpen={REGISTRATION_OPEN}
+        />
         {!isLoading && <MLHBadge />}
         
         {/* Quick Highlights */}
@@ -329,11 +334,15 @@ export default function Home() {
         </section>
 
         {/* Registration Section */}
-        <section id="register" className="py-20 px-6 bg-white">
-          <div className="max-w-2xl mx-auto">
-            <RegistrationForm />
-          </div>
-        </section>
+        {REGISTRATION_OPEN ? (
+          <section id="register" className="py-20 px-6 bg-white">
+            <div className="max-w-2xl mx-auto">
+              <RegistrationForm />
+            </div>
+          </section>
+        ) : (
+          <RegistrationClosed />
+        )}
 
         {/* Contact Section */}
         <div id="contact">
