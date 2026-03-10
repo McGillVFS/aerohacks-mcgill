@@ -11,6 +11,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function RegistrationForm() {
+  const registrationClosesAt = new Date(import.meta.env.VITE_REGISTRATION_CLOSES_AT || "2026-03-15T19:00:00-04:00");
+  const isRegistrationClosed = Number.isFinite(registrationClosesAt.getTime())
+    ? Date.now() >= registrationClosesAt.getTime()
+    : false;
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -320,6 +325,11 @@ export default function RegistrationForm() {
     e.preventDefault();
     setError("");
 
+    if (isRegistrationClosed) {
+      setError("Registration is now closed.");
+      return;
+    }
+
     if (!formData.first_name.trim() || !formData.last_name.trim() || !formData.email.trim()) {
       setError("Please complete all required fields.");
       return;
@@ -574,7 +584,11 @@ export default function RegistrationForm() {
               <Card className="shadow-xl border-gray-200">
                 <CardHeader>
                   <CardTitle className="text-2xl">Registration Information</CardTitle>
-                  <CardDescription>Enter your details to register for AeroHacks.</CardDescription>
+                  <CardDescription>
+                    {isRegistrationClosed
+                      ? "Registrations closed at 7:00 PM Montreal time."
+                      : "Enter your details to register for AeroHacks."}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -981,7 +995,7 @@ export default function RegistrationForm() {
 
                     <Button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isRegistrationClosed}
                       className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white py-6 text-lg"
                     >
                       {isSubmitting ? (
@@ -989,6 +1003,8 @@ export default function RegistrationForm() {
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                           Submitting...
                         </>
+                      ) : isRegistrationClosed ? (
+                        "Registration Closed"
                       ) : (
                         "Complete Registration"
                       )}

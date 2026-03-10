@@ -1,6 +1,7 @@
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseTableUrl = supabaseUrl ? `${supabaseUrl}/rest/v1/registrations` : null;
+const registrationClosesAt = new Date(process.env.REGISTRATION_CLOSES_AT || "2026-03-15T19:00:00-04:00");
 
 const allowHeaders = [
   "Content-Type",
@@ -50,6 +51,11 @@ export default async function handler(req = {}, res = {}) {
 
   if (!supabaseUrl || !supabaseServiceRoleKey || !supabaseTableUrl) {
     respond(res, 500, { error: "Supabase backend is not configured" });
+    return;
+  }
+
+  if (Number.isFinite(registrationClosesAt.getTime()) && Date.now() >= registrationClosesAt.getTime()) {
+    respond(res, 403, { error: "Registration is now closed." });
     return;
   }
 
